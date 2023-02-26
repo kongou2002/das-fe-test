@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import Chart from "../../hooks/chart";
-import { useAppContext } from "../../hooks/rerender";
+import Chart from "./chart";
+import { useAppContext } from "../../context/RerenderContext";
 import { Box } from "@mui/material";
-
+import { DataContext } from "../../context/DataContext";
+import { useContext } from "react";
 type DataPoint = { label: string; value: number };
 
 const label = [
@@ -32,22 +33,22 @@ const label = [
 const selectvalue = ["OrderNumber", "EmployeeID", "HourlyRate"];
 
 function HistogramData() {
+  const { data } = useContext(DataContext);
   const [selectedData, setSelectedData] = useState<string>("");
   const [selectedValue, setSelectedValue] = useState<string>("OrderNumber");
-  const [data, setData] = useState<DataPoint[]>([]);
+  const [dataPoint, setDataPoint] = useState<DataPoint[]>([]);
   const { reRender } = useAppContext();
 
   useEffect(() => {
-    //get data from local storage
-    const dataFromLocalStorage = JSON.parse(
-      localStorage.getItem("data") || "[]"
-    );
+    //get data from context
+    const dataFromContext = data;
+
     //get base on label and value
-    const data = dataFromLocalStorage.map((d: any) => ({
+    const value = dataFromContext.map((d: any) => ({
       label: d[selectedData],
       value: d[selectedValue],
     }));
-    setData(data);
+    setDataPoint(value);
   }, [reRender, selectedData, selectedValue]);
 
   const handleDataSetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -60,7 +61,7 @@ function HistogramData() {
     setSelectedValue(selectedValue);
   };
   return (
-    <Box sx={{ textAlign: "center" }}>
+    <Box sx={{ textAlign: "center", mt: "50px" }}>
       <select value={selectedData || ""} onChange={handleDataSetChange}>
         <option disabled value="">
           Select data set
@@ -83,7 +84,7 @@ function HistogramData() {
           ))}
         </select>
       )}
-      {data.length > 0 && <Chart data={data} />}
+      {data.length > 0 && <Chart data={dataPoint} />}
     </Box>
   );
 }

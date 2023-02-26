@@ -51,15 +51,15 @@ const Chart: React.FC<HistogramProps> = ({
         })}
       </svg>
       <div className="histogram-labels">
-        {data.map((d, i) => {
+        {data.map((data, key) => {
           return (
-            <div className="histogram-label" key={i}>
-              <div>{d.label}</div>
+            <div className="histogram-label" key={key}>
+              <div>{data.label}</div>
               <div
                 className="histogram-label-value"
                 style={{ fontWeight: "lighter" }}
               >
-                {d.value}
+                {data.value}
               </div>
             </div>
           );

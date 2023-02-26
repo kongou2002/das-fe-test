@@ -1,37 +1,65 @@
 import { Box, Button, TextField } from "@mui/material";
-import { useState, useCallback } from "react";
+import { useFormik } from "formik";
+import { useCallback, useContext } from "react";
+import { initialValues, validationSchema } from "./formControl";
+import { DataContext } from "../../context/DataContext";
+import { useAppContext } from "../../context/RerenderContext";
+type FieldName =
+  | "CustFirstName"
+  | "CustLastName"
+  | "CustAddress"
+  | "CustCity"
+  | "CustState"
+  | "CustZip"
+  | "CustPhone"
+  | "CustEmail"
+  | "OrderNumber"
+  | "OrderDate"
+  | "ShipDate"
+  | "EmployeeID"
+  | "EmpFirstName"
+  | "EmpLastName"
+  | "EmpStreet"
+  | "EmpCity"
+  | "EmpState"
+  | "EmpZip"
+  | "EmpPhone"
+  | "Position"
+  | "DateHired"
+  | "HourlyRate";
 
 function Form() {
-  const [data, setData] = useState<any>({});
+  const { data, setData } = useContext(DataContext);
+  const { reRender, setReRender } = useAppContext();
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: (values) => {
+      console.log(values);
+      // get data from context and +1 to CustomerID to create new record
+      const dataFromContext = data;
+      const newCustomerID = dataFromContext.length + 1;
+      const newData = { ...values, CustomerID: newCustomerID };
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setData((prevState: any) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  }, []);
+      // set data to context
+      setData([...dataFromContext, newData]);
+      // check if data is saved to context
+      console.log(data);
+      // set data to table
+      alert("Data has been saved");
+      // reset form
+      setReRender(!reRender);
+    },
+  });
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      formik.handleSubmit(e);
       //get data from local storage and +1 to CustomerID to create new record
-      const dataFromLocalStorage = JSON.parse(
-        localStorage.getItem("data") || "[]"
-      );
-      const newCustomerID = dataFromLocalStorage.length + 1;
-      const newData = { ...data, CustomerID: newCustomerID };
-      //set data to local storage
-      localStorage.setItem(
-        "data",
-        JSON.stringify([...dataFromLocalStorage, newData])
-      );
-      //set data to table
-      setData(newData);
-      alert("Data has been saved");
-      //reset form
       e.currentTarget.reset();
     },
-    [data]
+    [formik]
   );
 
   return (
@@ -71,13 +99,21 @@ function Form() {
         <TextField
           autoFocus
           margin="dense"
-          name={name}
+          name={name as FieldName} // cast `name` as `FieldName`
           label={label}
           variant="standard"
           type={type}
-          onChange={handleChange}
+          onChange={formik.handleChange}
           InputLabelProps={{ shrink: true }}
           key={name}
+          error={
+            formik.touched[name as FieldName] &&
+            Boolean(formik.errors[name as FieldName])
+          }
+          helperText={
+            formik.touched[name as FieldName] &&
+            formik.errors[name as FieldName]
+          }
         />
       ))}
       <Button type="submit" variant="contained">

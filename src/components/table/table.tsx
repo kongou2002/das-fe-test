@@ -1,4 +1,5 @@
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -14,18 +15,15 @@ import {
   GridCellEditCommitParams,
   GridCellParams,
 } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
-import { data } from "../../data/data";
-import { useAppContext } from "../../hooks/rerender";
-import { DataColumns } from "./components/colum";
-import CustomToolbar from "./components/toolBar";
+import { useContext, useState } from "react";
+import { useAppContext } from "../../context/RerenderContext";
+import { DataContext } from "./../../context/DataContext";
+import { DataColumns } from "./columns";
+import CustomToolbar from "./toolBar";
 export default function Table() {
-  //set data to local storage
-  useEffect(() => {
-    localStorage.setItem("data", JSON.stringify(data));
-  }, []);
   //get data from local storage
   const { reRender, setReRender } = useAppContext();
+  const { data, setData, deleteData } = useContext(DataContext);
   const [rows, setRows] = useState(data);
   const [open, setOpen] = useState(false);
   const [param, setParam] = useState<number>(0);
@@ -33,10 +31,13 @@ export default function Table() {
     setParam(param);
     setOpen(true);
   };
-
+  console.log(rows);
   const handleClose = () => {
     setOpen(false);
   };
+  useEffect(() => {
+    setRows(data);
+  }, [reRender, data]);
   //add more to columns
   const columns = [
     ...DataColumns,
@@ -77,15 +78,10 @@ export default function Table() {
       ),
     },
   ];
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("data") || "[]");
-    setRows(data);
-  }, [reRender]);
   const handleDelete = (id: number) => {
-    //delete row from local storage
-    const data = JSON.parse(localStorage.getItem("data") || "[]");
-    const newData = data.filter((item: any) => item.CustomerID !== id);
-    localStorage.setItem("data", JSON.stringify(newData));
+    deleteData(id);
+    const newData = data.filter((item) => item.CustomerID !== id);
+    setData(newData);
     setRows(newData);
     setReRender(!reRender);
     setOpen(false);
@@ -106,7 +102,6 @@ export default function Table() {
           Toolbar: CustomToolbar,
         }}
         onCellEditCommit={(params: GridCellEditCommitParams) => {
-          const data = JSON.parse(localStorage.getItem("data") || "[]");
           const newData = data.map((item: any) => {
             if (item.CustomerID === params.id) {
               return {
@@ -116,7 +111,8 @@ export default function Table() {
             }
             return item;
           });
-          localStorage.setItem("data", JSON.stringify(newData));
+          //update to context
+          setData(newData);
           setRows(newData);
           setReRender(!reRender);
         }}

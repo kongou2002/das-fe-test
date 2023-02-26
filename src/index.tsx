@@ -3,17 +3,19 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { AppProvider } from "./hooks/rerender";
-
+import { AppProvider } from "./context/RerenderContext";
+import DataContextProvider from "./context/DataContext";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
 root.render(
   <React.StrictMode>
-    <AppProvider>
-      <App />
-    </AppProvider>
+    <DataContextProvider>
+      <AppProvider>
+        <App />
+      </AppProvider>
+    </DataContextProvider>
   </React.StrictMode>
 );
 

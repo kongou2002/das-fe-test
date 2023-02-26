@@ -6,8 +6,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import React from "react";
-import { useAppContext } from "../../../hooks/rerender";
-import Form from "../../form/form";
+import { useAppContext } from "../../context/RerenderContext";
+import Form from "../Form";
 function Create() {
   const { reRender, setReRender } = useAppContext();
   const [open, setOpen] = React.useState(false);

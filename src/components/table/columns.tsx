@@ -26,7 +26,7 @@ const uneditableColumn = (
 });
 
 export const DataColumns: GridColDef[] = [
-  editableColumn("CustomerID", "CustomerID", 90),
+  uneditableColumn("CustomerID", "CustomerID", 90),
   editableColumn("CustFirstName", "First name", 110),
   editableColumn("CustLastName", "Last name", 110),
   {

@@ -1,4 +1,4 @@
-export interface Data {
+export interface IData {
     CustomerID: number;
     CustFirstName: string;
     CustLastName: string;
@@ -10,7 +10,7 @@ export interface Data {
     CustEmail: string;
     OrderNumber: number;
     OrderDate: string;
-    Shipdate: string;
+    ShipDate?: string;
     EmployeeID: number;
     EmpFirstName: string;
     EmpLastName: string;
