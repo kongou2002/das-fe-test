@@ -31,7 +31,6 @@ export default function Table() {
     setParam(param);
     setOpen(true);
   };
-  console.log(rows);
   const handleClose = () => {
     setOpen(false);
   };

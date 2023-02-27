@@ -10,25 +10,9 @@ const label = [
   "CustFirstName",
   "CustLastName",
   "CustAddress",
-  "CustCity",
-  "CustState",
-  "CustZip",
-  "CustPhone",
-  "CustEmail",
-  "OrderNumber",
-  "OrderDate",
-  "ShipDate",
-  "EmployeeID",
   "EmpFirstName",
   "EmpLastName",
-  "EmpStreet",
-  "EmpCity",
-  "EmpState",
-  "EmpZip",
   "EmpPhone",
-  "Position",
-  "DateHired",
-  "HourlyRate",
 ];
 const selectvalue = ["OrderNumber", "EmployeeID", "HourlyRate"];
 
@@ -44,12 +28,12 @@ function HistogramData() {
     const dataFromContext = data;
 
     //get base on label and value
-    const value = dataFromContext.map((d: any) => ({
-      label: d[selectedData],
-      value: d[selectedValue],
+    const value = dataFromContext.map((data: any) => ({
+      label: data[selectedData],
+      value: data[selectedValue],
     }));
     setDataPoint(value);
-  }, [reRender, selectedData, selectedValue]);
+  }, [reRender, selectedData, selectedValue, data]);
 
   const handleDataSetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedDataSetId = event.target.value;
