@@ -1,0 +1,4 @@
+{
+  "git-branch-wise-session.autoSaveBranchOnSwitch": true,
+  "git-branch-wise-session.shouldAutoRestoreOnBranchSwitches": true
+}
